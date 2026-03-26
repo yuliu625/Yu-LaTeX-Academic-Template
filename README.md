@@ -1,22 +1,6 @@
 # LaTeX Academic Template
 This is a **LaTeX Engineering Template** built on the "Convention over Configuration" philosophy. Its core objective is to achieve **hierarchical isolation**, enabling the seamless migration and rapid reuse of academic assets (figures, tables, algorithms, and text) across different publisher templates.
 
-## 🌟 Core Philosophy
-### Convention over Configuration
-By utilizing a preset folder structure, there is no need to write complex path-finding logic in `main.tex`. As long as files are placed in their corresponding `modules` or `components` directories, they can be called via standardized `\input` commands, significantly reducing configuration overhead during environment migrations.
-
-### Modular Isolation
-The neutral naming of `contents/modules` refers to either `sections` or `chapters`:
-- **Short Papers/Conferences**: A Module corresponds to a `\section`.
-- **Long Papers/Theses**: A Module corresponds to a `\chapter`.
-
-### Bridge Layer Design
-This is the essence of the template. `components` acts as a bridge between `assets` and `contents`:
-- **Modification-Friendly**: If an image needs to be swapped from `.pdf` to `.png`, you only need to modify the wrapper code in `components` without touching the actual body text in `contents`.
-- **Multi-Invoke**: The same figure component can be referenced simultaneously by the thesis `main.tex` and a presentation `beamer.tex`.
-
-### Collaborative Compatibility
-Acknowledging that not all academic collaborators are proficient with Git, the `backups` folder provides a physical storage space for older drafts or "scratchpads" revised by collaborators, ensuring manual fault tolerance during version rollbacks.
 
 ## 📂 Project Structure
 This project treats paper construction as an automated pipeline where each layer handles specific tasks, ensuring the decoupling of content and presentation.
@@ -48,6 +32,25 @@ This project treats paper construction as an automated pipeline where each layer
 ├── scripts/                # Automation scripts (data-to-table conversion, cleanup, etc.)
 └── backups/                # Fault-tolerance: Backups of old versions for Git-unfamiliar collaborators
 ```
+
+
+## 🌟 Core Philosophy
+### Convention over Configuration
+By utilizing a preset folder structure, there is no need to write complex path-finding logic in `main.tex`. As long as files are placed in their corresponding `modules` or `components` directories, they can be called via standardized `\input` commands, significantly reducing configuration overhead during environment migrations.
+
+### Modular Isolation
+The neutral naming of `contents/modules` refers to either `sections` or `chapters`:
+- **Short Papers/Conferences**: A Module corresponds to a `\section`.
+- **Long Papers/Theses**: A Module corresponds to a `\chapter`.
+
+### Bridge Layer Design
+This is the essence of the template. `components` acts as a bridge between `assets` and `contents`:
+- **Modification-Friendly**: If an image needs to be swapped from `.pdf` to `.png`, you only need to modify the wrapper code in `components` without touching the actual body text in `contents`.
+- **Multi-Invoke**: The same figure component can be referenced simultaneously by the thesis `main.tex` and a presentation `beamer.tex`.
+
+### Collaborative Compatibility
+Acknowledging that not all academic collaborators are proficient with Git, the `backups` folder provides a physical storage space for older drafts or "scratchpads" revised by collaborators, ensuring manual fault tolerance during version rollbacks.
+
 
 ## 💡 Usage Guide
 1.  **Prepare Material**: Place raw experimental figures/plots into `assets`.
