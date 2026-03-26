@@ -1,47 +1,73 @@
 # Latex Academic Template
-我在这个模板仓库定义了一个结构清晰、内容易于复用的 **LaTeX 项目模板**。
-它遵循一套标准化的项目结构，以能够更高效地撰写学术论文、报告或进行学术演讲。
+这是一个遵循“约定优于配置”思想的 **LaTeX 工程化模板**。其核心目标是通过**层级隔离**，实现学术资产（图表、算法、文字）在不同出版社模板间的无缝迁移与快速复用。
 
 
-## 设计特性
-- **结构化管理**: 将不同类型的内容（如章节、图表、算法等）分门别类地组织，避免单个`main.tex`文件过长而难以控制和管理。
-- **内容复用**: 轻松地在不同项目或模板间复用已有的内容，如将整个`contents`文件夹复制到新项目中，或在学术演讲(使用`beamer`)中直接调用已构建的图表和算法。
-- **易于维护**: 清晰的文件结构使项目更易于维护和更新，尤其是多人合作的场景。
+## 🌟 核心设计哲学
+### 约定优于配置
+通过预设的文件夹命名结构，无需在 `main.tex` 中编写复杂的路径查找逻辑。只要将文件放入对应的 `modules` 或 `components`，即可通过标准化的 `\input` 命令进行调用，极大降低了环境迁移时的配置成本。
+
+### 模块化隔离
+`contents/modules` 这个中性命名指的是 `sections` 或 `chapters`，即:
+- **短文/会议**: Module 对应 `\section`。
+- **长文/学位论文**: Module 对应 `\chapter`。
+
+### 过渡层设计
+这是本模板的精髓。`components` 作为 `assets` 与 `contents` 之间的桥梁：
+- **修改友好**: 如果图片需要从 `.pdf` 换成 `.png`，只需修改 `components` 里的封装代码，无需触碰正文 `contents`。
+- **多处调用**: 同一个图表组件可以同时被论文 `main.tex` 和演示文稿 `beamer.tex` 引用。
+
+### 协作兼容性
+考虑到学术合作中并非所有成员都熟练使用 Git，`backups` 文件夹提供了一个物理存储空间，用于存放合作者修改后的旧稿或草堆，确保在版本回溯时的人工容错。
 
 
-### 项目结构
+## 📂 项目结构
+本项目将论文构建视为一条自动化流水线，每一层处理特定的任务，确保内容与表现形式解耦。
 ```bash
-.
-├── main.tex                 # 主文件，通过 input 导入 contents 中的内容
-└── contents/
-    ├── sections/            # 论文的主要章节内容（如引言、方法、实验等）
-    ├── references/          # 参考文献文件（.bib）
-    ├── figures/             # 图片文件及其对应的 LaTeX 代码
-    │   ├── original_figures/  # （可选）存放原始图片文件（如 .svg, .ai 等）
-    │   └── ...
-    ├── tables/              # 表格文件及其对应的 LaTeX 代码
-    └── algorithms/          # 算法伪代码文件
+# 1. 原始资源层 (Raw Assets)
+├── assets/                 # 存放原始实验数据 (SVG, AI, Python Plot, Excel)
+│
+# 2. LaTeX 适配层 (Component Bridge)
+├── components/             # 过渡层：将 Assets 包装为 LaTeX 可调用的对象
+│   ├── figures/            # 包含 \includegraphics, \caption, \label 的独立 .tex 片段
+│   ├── tables/             # 封装好的表格逻辑
+│   └── algorithms/         # 封装好的伪代码块
+│
+# 3. 语义内容层 (Semantic Contents)
+├── contents/               # 纯文字内容，不涉及具体的排版样式
+│   ├── modules/            # 论文主体 (Chapter 或 Section )
+│   ├── appendix/           # 附录内容
+│   ├── references/         # 参考文献库 (.bib)
+│   └── structure.tex       # 逻辑组织层，编排 Modules 
+│
+# 4. 环境配置层 (Global Configs)
+├── configs/                # 全局宏包依赖与自定义宏命令 
+│
+# 5. 表现/输出层 (Presentation Layer)
+├── main.tex                # 出版社提供的标准模板入口（如 IEEEtran.cls / nature.cls）
+│
+# 6. 辅助工具层 (Support & Ops)
+├── scripts/                # 自动化处理脚本（数据转表格、清理冗余等）
+└── backups/                # 容错层：为不熟悉 Git 的合作者保留的旧版内容备份
 ```
 
-### 使用场景
-1. **新建项目**: 将整个仓库克隆(`git clone`)到本地，然后开始编辑 `contents` 文件夹中的文件。
-1. **切换模板**: 
-   - 当需要将论文提交到不同会议或期刊时，只需将整个 `contents` 文件夹复制到新的模板项目中。
-   - 必要的，在新模板的 `main.tex` 或主文件中，使用`\input{contents/sections/specific_section.tex}`等命令导入所需的内容(正如`main.tex`文件示例)。
-1. **学术演讲**：
-   - 构建`beamer`幻灯片时，可以直接引用`figures`、`tables`或`algorithms`文件夹中已有的文件，无需重新编写。
+
+## 💡 使用指南
+1.  **准备素材**: 将实验原始图表放入 `assets`。
+2.  **编写组件**: 在 `components` 中创建对应的 `.tex` 文件，引用 `assets` 中的导出图。
+3.  **撰写内容**: 在 `contents/modules` 中完成文字叙述，并在需要处引用 `components` 中的组件。
+4.  **注入容器**: 在 `main.tex` 中通过 `\input{contents/structure.tex}` 完成整篇论文的组装。
 
 
-## 更多说明
-- **参考文献**: 本项目默认使用 **BibTeX**，它兼容多种文献管理系统。可以将`.bib`文件放置在`contents/references`文件夹中。
-- **图片**: 建议在`figures`文件夹下创建`original_figures`子文件夹，用于存放图片的原始编辑文件(如`.svg`、`.ai`等)，以便后续修改。每个`.tex`文件可以直接包含图片和对应的caption，方便在`main.tex`中直接`\input`导入。
-- **算法**: 本项目主要使用`{algorithm, algpseudocode}`环境。如果使用其他宏包(如 `{algpseudocode}`)，可以根据需要进行调整。
+## 🚀 快速切换投稿流
+当需要更换投稿期刊时，你的工作流仅需两步：
+1. **替换 `main.tex`**: 使用出版社提供的 `.cls` 和 `.tex` 样例。
+2. **重定向引用**: 在新 `main.tex` 中通过 `\input{configs/...}` 和 `\input{contents/structure.tex}` 重新挂载你的内容资产。
 
 
-## 其他项目
-除了 LaTeX 模板，我还构建了一个基于**Typst**的学术模板[Typst-Academic-Template](https://github.com/yuliu625/Yu-Typst-Academic-Template)。尽管Typst是一种更现代、高效的排版工具(当然也存在一些问题)，但目前LaTeX仍然是学术界的主流规范。你可以:
-- 使用Typst快速构建内容。
-- 利用相关工具将Typst项目转换为LaTeX格式。(对于个人论文如此，合作论文可能需要共同使用LaTeX在线编辑工具。)
+## 🔗 关联项目
+除了 LaTeX 模板，我还构建了一个基于**Typst**的学术模板[Typst-Academic-Template](https://github.com/yuliu625/Yu-Typst-Academic-Template)。尽管Typst是一种更现代、高效的排版工具，但目前LaTeX仍然是学术界的主流规范。你可以:
+- 使用 Typst 日常使用和快速构建内容。
+- 使用相关工具将 Typst 项目转换为 LaTeX 格式。(对于个人论文如此，合作论文可能需要共同使用LaTeX在线编辑工具。)
 
 这个模板系列的目的，是为了能够轻松地在不同排版工具间转换和复用内容，以适应不同的合作和投稿需求。
 
