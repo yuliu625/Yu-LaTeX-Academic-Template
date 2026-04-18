@@ -15,7 +15,7 @@
 ├── components/             # 过渡层：将 Assets 包装为 LaTeX 可调用的对象
 │   ├── figures/            # 包含 \includegraphics, \caption, \label 的独立 .tex 片段
 │   ├── tables/             # 封装好的表格逻辑
-│   └── snippets/         # 封装好的伪代码块
+│   └── snippets/           # 封装好的伪代码块
 │
 # 3. 语义内容层 (Semantic Contents)
 ├── contents/               # 纯文字内容，不涉及具体的排版样式
