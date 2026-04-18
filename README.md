@@ -15,7 +15,7 @@ This project treats paper construction as an automated pipeline where each layer
 ├── components/             # Bridge: Wraps Assets into LaTeX-callable objects
 │   ├── figures/            # Independent .tex snippets containing \includegraphics, \caption, \label
 │   ├── tables/             # Encapsulated table logic
-│   └── snippets/         # Encapsulated pseudocode blocks
+│   └── snippets/           # Encapsulated pseudocode blocks
 │
 # 3. Semantic Contents Layer
 ├── contents/               # Pure text content, independent of specific typesetting styles
